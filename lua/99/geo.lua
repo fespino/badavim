@@ -279,11 +279,9 @@ function Range:to_text()
     local sr, sc = self.start:to_vim()
     local er, ec = self.end_:to_vim()
 
-    -- note
-    -- this api is 0 index end exclusive for _only_ column
-    if ec == 0 then
-        ec = -1
-        er = er - 1
+    --- blank line vis selection
+    if sr == er and sc == ec then
+        ec = ec + 1
     end
 
     local text = vim.api.nvim_buf_get_text(self.buffer, sr, sc, er, ec, {})

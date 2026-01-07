@@ -71,13 +71,32 @@ describe("Range", function()
         }, lines)
     end)
 
+    it(
+        "should be able to visual line select an empty line and return out an empty line of text",
+        function()
+            vim.api.nvim_win_set_cursor(0, { 5, 0 })
+            vim.api.nvim_feedkeys("V", "x", false)
+
+            test_utils.next_frame()
+            vim.api.nvim_feedkeys(
+                vim.api.nvim_replace_termcodes("<Esc>", true, false, true),
+                "x",
+                false
+            )
+
+            local range = Range.from_visual_selection()
+            local text = range:to_text()
+            eq("", text)
+        end
+    )
+
     it("should create range from simple visual line selection", function()
         vim.api.nvim_win_set_cursor(0, { 2, 0 })
         vim.api.nvim_feedkeys("V", "x", false)
 
         test_utils.next_frame()
         vim.api.nvim_feedkeys(
-            vim.api.nvim_replace_termcodes("<Esc>gv", true, false, true),
+            vim.api.nvim_replace_termcodes("<Esc>", true, false, true),
             "x",
             false
         )

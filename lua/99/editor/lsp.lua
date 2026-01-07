@@ -612,6 +612,10 @@ function Lsp._format_exports(
     return table.concat(out, "\n")
 end
 
+Lsp.stringify_module_exports("99.editor.lsp", function(res)
+    print(res)
+end)
+
 return {
     Lsp = Lsp,
 }
