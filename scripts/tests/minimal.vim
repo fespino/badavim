@@ -22,7 +22,7 @@ runtime! plugin/nvim-treesitter.lua
 
 lua <<EOF
 local required_parsers = {
-    'c', 'cpp', 'go', 'lua', 'php', 'python', 'typescript', 'javascript', 'java', 'ruby', 'tsx', 'c_sharp', 'vue'
+    'c', 'cpp', 'go', 'lua', 'php', 'python', 'typescript', 'javascript', 'java', 'ruby', 'tsx', 'c_sharp', 'vue', 'elixir'
 }
 local installed_parsers = require'nvim-treesitter.info'.installed_parsers()
 local to_install = vim.tbl_filter(function(parser)
