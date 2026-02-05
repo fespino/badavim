@@ -1,3 +1,5 @@
+### This is just a fork from https://github.com/ThePrimeagen/99 for learning purposes. Use that one instead.
+
 # IF YOU ARE HERE FROM THE YT VIDEO
 a few things changed.  completion is a bit different for skills.  i now require `@` to begin with
 ... ill try to update as it happens ...
