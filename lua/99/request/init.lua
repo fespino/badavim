@@ -29,7 +29,9 @@ Request.__index = Request
 --- @param context _99.RequestContext
 --- @return _99.Request
 function Request.new(context)
-  local provider = context._99.provider_override or Providers.OpenCodeProvider
+  local provider = context.provider_override
+    or context._99.provider_override
+    or Providers.OpenCodeProvider
   return setmetatable({
     context = context,
     provider = provider,

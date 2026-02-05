@@ -64,6 +64,7 @@ end
 --- @field display_errors boolean
 --- @field auto_add_skills boolean
 --- @field provider_override _99.Providers.BaseProvider?
+--- @field routes _99.Routes
 --- @field __active_requests table<number, _99.ActiveRequest>
 --- @field __view_log_idx number
 --- @field __request_history _99.RequestEntry[]
@@ -80,6 +81,7 @@ local function create_99_state()
     display_errors = false,
     provider_override = nil,
     auto_add_skills = false,
+    routes = {},
     __active_requests = {},
     __view_log_idx = 1,
     __request_history = {},
@@ -91,11 +93,18 @@ end
 --- @field source "cmp" | nil
 --- @field custom_rules string[]
 
+--- @class _99.Route
+--- @field provider _99.Providers.BaseProvider?
+--- @field model string?
+
+--- @alias _99.Routes table<string, _99.Route>
+
 --- @class _99.Options
 --- @field logger _99.Logger.Options?
 --- @field model string?
 --- @field md_files string[]?
 --- @field provider _99.Providers.BaseProvider?
+--- @field routes _99.Routes?
 --- @field debug_log_prefix string?
 --- @field display_errors? boolean
 --- @field auto_add_skills? boolean
@@ -113,6 +122,7 @@ end
 --- @field display_errors boolean
 --- @field provider_override _99.Providers.BaseProvider?
 --- @field auto_add_skills boolean
+--- @field routes _99.Routes
 --- @field rules _99.Agents.Rules
 --- @field __active_requests table<number, _99.ActiveRequest>
 --- @field __view_log_idx number
@@ -283,6 +293,15 @@ local function get_context(operation_name)
   local trace_id = get_id()
   local context = RequestContext.from_current_buffer(_99_state, trace_id)
   context.operation = operation_name
+  local route = _99_state.routes[operation_name]
+  if route then
+    if route.model then
+      context.model = route.model
+    end
+    if route.provider then
+      context.provider_override = route.provider
+    end
+  end
   context.logger:debug("99 Request", "method", operation_name)
   return context
 end
@@ -448,6 +467,7 @@ function _99.setup(opts)
       source = nil,
       custom_rules = {},
     }
+  _99_state.routes = opts.routes or {}
   _99_state.completion.custom_rules = _99_state.completion.custom_rules or {}
   _99_state.auto_add_skills = opts.auto_add_skills or false
 
@@ -512,6 +532,19 @@ end
 --- @return _99
 function _99.set_model(model)
   _99_state.model = model
+  return _99
+end
+
+--- @param action string
+--- @param provider _99.Providers.BaseProvider?
+--- @param model string?
+--- @return _99
+function _99.route(action, provider, model)
+  assert(type(action) == "string", "action must be a string")
+  _99_state.routes[action] = {
+    provider = provider,
+    model = model,
+  }
   return _99
 end
 

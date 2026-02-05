@@ -15,6 +15,7 @@ local random_file = utils.random_file
 --- @field xid number
 --- @field range _99.Range?
 --- @field operation string?
+--- @field provider_override _99.Providers.BaseProvider?
 --- @field _99 _99.State
 local RequestContext = {}
 RequestContext.__index = RequestContext
@@ -47,6 +48,7 @@ function RequestContext.from_current_buffer(_99, xid)
     logger = Logger:set_id(xid),
     xid = xid,
     model = _99.model,
+    provider_override = nil,
     marks = {},
   }, RequestContext)
 end
